@@ -1,0 +1,16 @@
+{% extends 'news/base.html' %}
+
+{% block content %}
+<div class="news_images">
+    <img src="{{ news.image.url }}" alt="{{ news.title }}" width="850" height="600" style="margin-left: 14%;">
+</div>
+<div class="components_of_news ">
+    <h3 style="margin-left: 20%;">{{ news.title }}</h3>
+    <small>{{ news.published_time }} <br><br></small>
+    <p>{{ news.body }}</p>
+    <br>
+    <h4><a href="{% url 'home_page' %}">Bosh sahifa</a></h4>
+    <br>
+</div>
+
+{% endblock content %}

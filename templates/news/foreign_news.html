@@ -1,0 +1,16 @@
+{% extends 'news/base.html' %}
+
+{% block title %} Xorij {% endblock title %}
+
+{% block content %}
+
+    <div class="ul">
+
+        {% for foreign in foreign_news %}
+        <a href="{{ foreign.get_absolute_url }}"><h4><li><small>{{ foreign.published_time|date:"F d" }}</small> --- {{ foreign.title }}</li></h4></a>
+            <br>
+        {% endfor %}
+
+    </div>
+
+{% endblock content %}

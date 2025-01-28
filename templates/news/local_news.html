@@ -1,0 +1,16 @@
+{% extends 'news/base.html' %}
+
+{% block title %} Mahalliy {% endblock title %}
+
+{% block content %}
+
+    <div class="ul">
+
+        {% for local in local_news %}
+        <a href="{{ local.get_absolute_url }}"><h4><li><small>{{ local.published_time|date:"F d" }}</small> --- {{ local.title }}</li></h4></a>
+            <br>
+        {% endfor %}
+
+    </div>
+
+{% endblock content %}

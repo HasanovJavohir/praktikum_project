@@ -1,0 +1,16 @@
+{% extends 'news/base.html' %}
+
+{% block title %} Texnologiya {% endblock title %}
+
+{% block content %}
+
+    <div class="ul">
+
+        {% for technology in technology_news %}
+        <a href="{{ technology.get_absolute_url }}"><h4><li><small>{{ technology.published_time|date:"F d" }}</small> --- {{ technology.title }}</li></h4></a>
+            <br>
+        {% endfor %}
+
+    </div>
+
+{% endblock content %}

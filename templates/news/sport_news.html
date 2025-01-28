@@ -1,0 +1,16 @@
+{% extends 'news/base.html' %}
+
+{% block title %} Sport {% endblock title %}
+
+{% block content %}
+
+    <div class="ul">
+
+        {% for sport in sport_news %}
+        <a href="{{ sport.get_absolute_url }}"><h4><li><small>{{ sport.published_time|date:"F d" }}</small> --- {{ sport.title }}</li></h4></a>
+            <br>
+        {% endfor %}
+
+    </div>
+
+{% endblock content %}
