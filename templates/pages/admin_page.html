@@ -1,0 +1,28 @@
+{% extends 'news/base.html' %}
+
+{% block title %} Admin sahifasi {% endblock title %}
+
+{% block content %}
+
+    <h2>Adminlar ro'yhati:</h2>
+<br>
+    <table class="table table-bordered table-responsive table-striped">
+        <tr>
+            <th>Username</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Email</th>
+            <th>Date of birth</th>
+        </tr>
+        {% for user in admin_users %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.first_name }}</td>
+            <td>{{ user.last_name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.profile.date_of_birth }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock content %}

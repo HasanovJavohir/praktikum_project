@@ -1,0 +1,19 @@
+{% extends 'news/base.html' %}
+
+{% load static %}
+
+{% block title %} {{ news.title }} {% endblock title %}
+
+{% block content %}
+        <div class="delete-news">
+            <h2 class="text-center">Delete current news</h2>
+            <form method="post">{% csrf_token %}
+                <h3><a href="{{ news.get_absolute_url }}" style="color: #318CE7"><i>{{ news.title | truncatewords:7 }}</i></a> sarlavhali yangilikni ochirmoqchimisiz?</h3>
+                <br>
+                <button type="submit" class="btn btn-danger">Delete</button> |
+                <a href="{% url 'home_page' %}"><button type="button" class="btn btn-primary">Bosh sahifa</button></a>
+                <br>
+                <br>
+            </form>
+        </div>
+{% endblock content %}

@@ -1,0 +1,55 @@
+{% extends 'news/base.html' %}
+{% load static %}
+
+{% block title %} Profile {% endblock title %}
+
+{% block content %}
+
+
+<div class="container mt-4 text-center">
+    <!-- Profile Picture -->
+    <img src="{{ user.profile.photo.url }}" alt="Profile Picture" class="rounded-circle img-thumbnail" width="300" height="150">
+
+    <!-- User Information Table -->
+    <table class="table mt-3 w-50 mx-auto">
+        <tbody>
+            <tr>
+                <th class="text-end" style="padding-left: 200px">Username:</th>
+                <td class="text-start" style="padding-right: 100px">{{ user.username }}</td>
+            </tr>
+            <tr>
+                <th class="text-end" style="padding-left: 200px">Email:</th>
+                <td class="text-start" style="padding-right: 100px">{{ user.email }}</td>
+            </tr>
+            <tr>
+                <th class="text-end" style="padding-left: 200px">First Name:</th>
+                <td class="text-start" style="padding-right: 100px">{{ user.first_name }}</td>
+            </tr>
+            <tr>
+                <th class="text-end" style="padding-left: 200px">Last Name:</th>
+                <td class="text-start" style="padding-right: 100px">{{ user.last_name }}</td>
+            </tr>
+            <tr>
+                <th class="text-end" style="padding-left: 200px">Date of birth:</th>
+                <td class="text-start" style="padding-right: 100px">{{ user.profile.date_of_birth }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+
+
+<!--      <h2>Xush kelibsiz, <i style="color: darkblue">{{ user.username }}</i></h2><br>-->
+<!--      <h4>Siz kiritgan ma'lumotlar:</h4>-->
+<!--      <img src="{{ user.profile.photo.url }}" width="15%"><br><br>-->
+<!--      <label>Username:</label> <input value="{{ user.username }}" readonly><br>-->
+<!--      <label>Firstname:</label> <input value="{{ user.first_name }}" readonly><br>-->
+<!--      <label>Surname:</label> <input value="{{ user.last_name }}" readonly><br>-->
+<!--      <label>Email:</label> <input value="{{ user.email }}" readonly><br>-->
+<!--<br>-->
+      <div class="text-center">
+            <button class="btn btn-warning"><a href="{% url 'password_change_page' %}">Parolni almashtirish</a></button> |
+            <button class="btn btn-info"><a href="{% url 'profile_edit_page' %}">Edit PROFILE</a></button>
+      </div>
+{% endblock content %}

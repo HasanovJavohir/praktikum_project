@@ -35,9 +35,21 @@
               <li><a href="{% url 'home_page' %}">Home</a></li>
               <li><a href="{% url 'about_page' %}">About</a></li>
               <li><a href="{% url 'contact_page' %}">Contact</a></li>
+              {% if request.user.is_authenticated and request.user.is_superuser %}
+              <li><a href="{% url 'admin_page' %}" style="color: #4FFFB0">Admins</a></li>
+              {% endif %}
             </ul>
           </div>
           <div class="header_top_right">
+            {% if request.user.is_authenticated %}
+              <p><a href="{% url 'logout_page' %}" style="color: yellow">Logout</a></p>
+              <p>|</p>
+              <p><a href="{% url 'profile_page' %}" style="color: yellow">Profile</a></p>
+            {% else %}
+              <p><a href="{% url 'login_page' %}" style="color: yellow">Login</a></p>
+              <p>|</p>
+              <p><a href="{% url 'user_register_page' %}" style="color: yellow">Register</a></p>
+            {% endif %}
             <p>{% now "jS F Y H:i" %}</p>
           </div>
         </div>
@@ -64,6 +76,14 @@
           <li><a href="{% url 'local_page' %}">Local</a></li>
           <li><a href="{% url 'contact_page' %}">Contact Us</a></li>
           <li><a href="{% url '404_page' %}">404 Page</a></li>
+          {% if request.user.is_authenticated and request.user.is_superuser %}
+          <li><a href="{% url 'create_page' %}" style="color: #4FFFB0">CREATE</a></li>
+          {% endif %}
+          <li>
+            <form method="get" action="{% url 'search_results_page' %}">{% csrf_token %}
+              <input type="search" name="q" placeholder="Qidiruv..." class="form-control">
+            </form>
+          </li>
         </ul>
       </div>
     </nav>
@@ -74,7 +94,7 @@
         <div class="latest_newsarea"> <span>Latest News</span>
           <ul id="ticker01" class="news_sticker">
             {% for news in latest_news %}
-            <li><a href="#"><img src="/media/{{ news.image }}" alt="">{{ news.title }}</a></li>
+            <li><a href="{{ news.get_absolute_url }}"><img src="/media/{{ news.image }}" alt="">{{ news.title }}</a></li>
             {% endfor %}
           </ul>
           <div class="social_area">

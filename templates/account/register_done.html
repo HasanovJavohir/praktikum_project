@@ -1,0 +1,14 @@
+{% extends 'news/base.html' %}
+
+{% load static %}
+
+{% block title %} Register {% endblock title %}
+
+{% block content %}
+
+    <h2>Xush kelibsiz, {{ new_user.first_name }}!</h2>
+    <h4>Jarayon muvaffaqiyatli yakunlandi, Tabriklaymiz!!!</h4>
+    <br>
+    <h3><a href="{% url 'login_page' %}" class="btn btn-primary">Kirish</a></h3>
+
+{% endblock content %}

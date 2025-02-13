@@ -1,16 +1,46 @@
 {% extends 'news/base.html' %}
 
+{% load static %}
+
 {% block content %}
-<div class="news_images">
-    <img src="{{ news.image.url }}" alt="{{ news.title }}" width="850" height="600" style="margin-left: 14%;">
+<div class="text-center">
+    <img src="{{ news.image.url }}" alt="{{ news.title }}">
 </div>
 <div class="components_of_news ">
-    <h3 style="margin-left: 20%;">{{ news.title }}</h3>
-    <small>{{ news.published_time }} <br><br></small>
+    <h3 class="text-center">{{ news.title }}</h3>
+    <small>{{ news.published_time }} | Izohlar soni: <i>{{ comment_count }}</i> <br><br></small>
     <p>{{ news.body }}</p>
     <br>
-    <h4><a href="{% url 'home_page' %}">Bosh sahifa</a></h4>
+    <div class="text-center">
+        <a href="{% url 'home_page' %}"><button type="button" class="btn btn-primary">Bosh sahifa</button></a>
+        {% if request.user.is_authenticated and request.user.is_superuser %}
+           | <a href="{% url 'edit_page' news.slug %}"><button type="button" class="btn btn-warning">Edit</button></a> |
+            <a href="{% url 'delete_page' news.slug %}"><button type="button" class="btn btn-danger">Delete</button></a>
+        {% endif %}
+    </div>
     <br>
+    <br>
+
+        <h4>Izohlar soni <i style="color: #17B169">{{ comment_count }} </i> ta:</h4>
+        {% for comment in comments %}
+            <div class="comments" style="padding: 10px">
+                <p class="font-weight bold" style="color: #17B169">{{ comment.user }}</p>
+                <span class="text-muted font-weight-normal">{{ comment.created_time }}</span>
+                <p>{{ comment.body | linebreaks }}</p>
+                <hr width="100%">
+            </div>
+        {% endfor %}
+
+
+    <div class="col-md-8 card mb-4 mt-3">
+        <div class="card-body">
+            <h3>Izoh qoldirish</h3>
+            <form method="post">{% csrf_token %}
+                {{ comment_form.as_p }}
+                <button type="submit" class="btn btn-primary">Qo'shish</button>
+            </form>
+        </div>
+    </div>
 </div>
 
 {% endblock content %}

@@ -1,9 +1,16 @@
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import ListView, DetailView, TemplateView
-
+from django.urls import reverse_lazy
+from django.utils.text import slugify
+from django.views.generic import ListView, DetailView, TemplateView, UpdateView, DeleteView, CreateView
+from news.custom_permissions import OnlyLoggedSuperUser
 from .models import News, Category
-from .forms import ContactForm
+from .forms import ContactForm, CommentForm
+# from hitcount.views import HitCountDetailView
 
 
 def news_list(request):
@@ -17,8 +24,29 @@ def news_list(request):
 
 def newsdetailview(request, news):
     news = get_object_or_404(News, slug=news, status="PB")
+    # context = {}
+    # # hit_count logic
+    # hit_count = get_hitcount_model().obects.get_for_object(news)
+    comments = news.comments.filter(active=True)
+    comment_count = comments.count()
+    news_comment = None
+    if request.method == 'POST':
+        comment_form = CommentForm(data=request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.news = news
+            new_comment.user = request.user
+            new_comment.save()
+            comment_form = CommentForm()
+    else:
+        comment_form = CommentForm()
+
     context = {
         "news": news,
+        "comments": comments,
+        "comment_count": comment_count,
+        "news_comment": news_comment,
+        "comment_form": comment_form
     }
 
     return render(request, "news/news_detail_view.html", context=context)
@@ -134,7 +162,7 @@ class TechnologyNewsView(ListView):
         return news
 
 
-class ForeignNewsView(ListView):
+class ForeignNewsView(LoginRequiredMixin, ListView):
     model = News
     template_name = "news/foreign_news.html"
     context_object_name = "foreign_news"
@@ -142,3 +170,59 @@ class ForeignNewsView(ListView):
     def get_queryset(self):
         news = self.model.objects.all().filter(category__name="Xorij")
         return news
+
+
+class NewsUpdateView(OnlyLoggedSuperUser, UpdateView):
+    model = News
+    fields = ("title", "body", "image", "category", "status")
+    template_name = "crud/news_edit.html"
+
+
+class NewsDeleteView(OnlyLoggedSuperUser, DeleteView):
+    model = News
+    template_name = "crud/news_delete.html"
+    success_url = reverse_lazy('home_page')
+
+
+class NewsCreateView(OnlyLoggedSuperUser, CreateView):
+    model = News
+    template_name = "crud/news_create.html"
+    fields = ('title', 'body', 'image', 'category', 'status')
+
+    def form_valid(self, form):
+        # Check if the form is valid and then generate the slug
+        title = form.cleaned_data['title']
+        slug = slugify(title)
+
+        # Ensure the slug is unique, if necessary
+        original_slug = slug
+        counter = 1
+        while News.objects.filter(slug=slug).exists():
+            slug = f"{original_slug}-{counter}"
+            counter += 1
+
+        # Set the slug on the form instance
+        form.instance.slug = slug
+
+        # Call the parent class to handle the form submission
+        return super().form_valid(form)
+
+
+@login_required
+@user_passes_test(lambda user: user.is_superuser)
+def admin_page_view(request):
+    admin_users = User.objects.filter(is_superuser=True)
+    context = {
+        "admin_users": admin_users,
+    }
+    return render(request, "pages/admin_page.html", context)
+
+
+class SearchResultsView(ListView):
+    model = News
+    template_name = 'news/search_results.html'
+    context_object_name = "search_results"
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        return News.objects.filter(Q(title__icontains=query) | Q(body__icontains=query))

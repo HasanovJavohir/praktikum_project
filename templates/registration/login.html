@@ -1,0 +1,26 @@
+{% extends 'news/base.html' %}
+{% load static %}
+
+{% block title %} Login sahifasi {% endblock title %}
+
+{% block content %}
+
+    <h2>Kirish - Login</h2>
+    <p>Websitega kirish uchun quyidagi formani to'ldiring</p>
+    <br>
+
+    {% if messages %}
+        <div class="error-messages">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Login</button> |
+        <button type="submit" class="btn btn-danger"><a href="{% url 'password_reset' %}" style="color: white;">Parolni Tiklash</a></button>
+    </form>
+
+{% endblock content %}
