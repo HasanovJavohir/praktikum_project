@@ -187,7 +187,7 @@ class NewsDeleteView(OnlyLoggedSuperUser, DeleteView):
 class NewsCreateView(OnlyLoggedSuperUser, CreateView):
     model = News
     template_name = "crud/news_create.html"
-    fields = ('title', 'body', 'image', 'category', 'status')
+    fields = ('title', 'title_uz', 'title_en', 'title_ru', 'body', 'body_uz', 'body_en', 'body_ru', 'image', 'category', 'status')
 
     def form_valid(self, form):
         # Check if the form is valid and then generate the slug
